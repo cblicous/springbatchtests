@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<!-- Import infrastructure -->		
+	<import resource="classpath:/jobs/Job.Infrastructure.xml"/>
+
+	<!-- Job definition -->
+	<batch:job id="jobRemoteChunkingMaster">
+		<batch:step id="step1" parent="partitionStep" />
+	</batch:job>
+
+	<batch:step id="partitionStep">
+		<batch:tasklet 
+			transaction-manager="transactionManager">
+			<batch:chunk writer="chunkMessageChannelItemWriter"
+				reader="itemReader" processor="itemProcessor" commit-interval="100" />
+		</batch:tasklet>
+	</batch:step>
+</beans>

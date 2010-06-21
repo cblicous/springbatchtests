@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:integration="http://www.springframework.org/schema/integration"
+	xmlns:jms="http://www.springframework.org/schema/integration/jms"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                 http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                                 http://www.springframework.org/schema/integration
+                                 http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+                                 http://www.springframework.org/schema/integration/jms
+                                 http://www.springframework.org/schema/integration/jms/spring-integration-jms-1.0.xsd
+                                 http://www.springframework.org/schema/context
+                                 http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                                 http://www.springframework.org/schema/tx
+                                 http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<!-- Spring basic -->
+	
+	<bean id="placeholderProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:batch.properties" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="order" value="1" />
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${batch.jdbc.driver}" />
+		<property name="url" value="${batch.jdbc.url}" />
+		<property name="username" value="${batch.jdbc.user}" />
+		<property name="password" value="${batch.jdbc.password}" />
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	<tx:annotation-driven />
+	
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="persistenceUnitName" value="springbatch.article" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="generateDdl" value="false" />
+				<property name="showSql" value="true" />
+				<property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect"/>
+				<!-- <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />  -->
+				<!-- <property name="jpaDialect" value="org.springframework.orm.jpa.vendor.HibernateJpaDialect" /> -->
+			</bean>
+		</property>
+	</bean>
+
+	<!-- Spring batch -->
+	
+	<!--
+		Hibernate JPA dialect does not support custom tx isolation levels =>
+		overwrite with ISOLATION_DEFAULT
+	-->
+	<bean id="jobRepository"
+		class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
+		<property name="isolationLevelForCreate" value="ISOLATION_DEFAULT" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
+
+	<bean id="jobLauncher"
+		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+
+	<!-- JMS -->
+	
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="brokerURL" value="vm://localhost" />
+			</bean>
+		</property>
+		<property name="sessionCacheSize" value="10" />
+		<property name="cacheProducers" value="false" />
+	</bean>
+
+	<bean id="chunksInQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="queue.chunksin" />
+	</bean>
+
+	<bean id="chunksOutQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="queue.chunksout" />
+	</bean>
+	
+	<!-- Spring integration -->
+
+	<integration:annotation-config />
+
+	<integration:poller id="poller" default="true">
+		<integration:interval-trigger interval="1000" />
+	</integration:poller>
+
+	<jms:outbound-gateway id="jmsoutgateway"
+		request-destination="chunksOutQueue" reply-destination="chunksInQueue"
+		request-channel="chunksOutChan" reply-channel="chunksInChan" />
+
+	<integration:channel id="chunksInChan" />
+	<integration:channel id="chunksOutChan" />
+
+<!-- 	<integration:service-activator
+		input-channel="chunksInChan" ref="chunkMessageChannelItemWriter"
+		output-channel="chunksOutChan" /> -->
+
+	<bean id="messagingGateway" class="org.springframework.integration.gateway.SimpleMessagingGateway">
+		<property name="requestChannel" ref="chunksInChan" />
+		<property name="replyChannel" ref="chunksOutChan" />
+		<property name="replyTimeout" value="1000" />
+	</bean>
+
+	<bean id="chunkMessageChannelItemWriter"
+		class="org.springframework.batch.integration.chunk.ChunkMessageChannelItemWriter">
+		<property name="messagingGateway" ref="messagingGateway" />
+	</bean>
+
+</beans>
