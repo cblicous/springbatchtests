@@ -42,7 +42,7 @@
 		<property name="persistenceUnitName" value="springbatch.article" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="generateDdl" value="false" />
+				<property name="generateDdl" value="true" />
 				<property name="showSql" value="true" />
 				<property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect"/>
 				<!-- <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />  -->
