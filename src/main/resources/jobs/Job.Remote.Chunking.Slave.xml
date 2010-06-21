@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<!-- Import infrastructure -->		
+	<import resource="classpath:/jobs/Job.Infrastructure.xml"/>
+
+	<!-- Job definition -->
+	<batch:job id="endOfTheDayAccrualPlanJobRemoteChunkingMaster">
+		<batch:step id="step1" parent="partitionStep" />
+	</batch:job>
+
+	<batch:step id="partitionStep">
+		<batch:tasklet 
+			transaction-manager="transactionManager">
+			<batch:chunk writer="chunkMessageChannelItemWriter"
+				reader="itemReader" processor="itemProcessor" commit-interval="100" />
+		</batch:tasklet>
+	</batch:step>
+	
+		<!-- slave -->
+
+	<jms:inbound-gateway id="jmsingateway" request-destination="chunksOutQueue" request-channel="chunksOutChan"
+		default-reply-destination="chunksInQueue" />
+	
+	<bean id="chunkHandler"
+		class="org.springframework.batch.integration.chunk.ChunkProcessorChunkHandler">
+		<property name="chunkProcessor">
+			<bean class="org.springframework.batch.core.step.item.SimpleChunkProcessor">
+				<property name="itemWriter">
+					<bean class="com.anderscore.springbatch.article.MyJpaItemWriter">
+						<property name="entityManagerFactory" ref="entityManagerFactory" />
+					</bean>
+				</property>
+				<property name="itemProcessor">
+					<bean
+						class="org.springframework.batch.item.support.PassThroughItemProcessor" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<integration:service-activator
+		input-channel="chunksOutChan" output-channel="chunksInChan" ref="chunkHandler" />
+	
+</beans>

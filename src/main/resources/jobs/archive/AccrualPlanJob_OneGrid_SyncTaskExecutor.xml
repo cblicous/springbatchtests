@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<!-- Import infrastructure -->		
+	<import resource="classpath:/jobs/AccrualPlanJob_Infrastructure.xml"/>
+
+	<!-- Job definition -->
+	<batch:job id="endOfTheDayAccrualPlanJob1">
+		<batch:step id="preparationStep" parent="partitionStep:master" />
+	</batch:job>
+
+	<batch:step id="partitionStep">
+		<batch:tasklet transaction-manager="transactionManager">
+			<batch:chunk writer="itemWriter" reader="itemReader" processor="itemProcessor" commit-interval="10000" />
+		</batch:tasklet>
+	</batch:step>
+	
+	<bean id="PartitionStepHandler" class="org.springframework.batch.core.partition.support.TaskExecutorPartitionHandler">
+		<property name="taskExecutor">
+			<bean class="org.springframework.core.task.SyncTaskExecutor" />
+		</property>
+		<property name="step" ref="partitionStep" />
+		<property name="gridSize" value="1" />
+		
+	</bean>
+
+	<!-- Step definition -->
+	<bean name="partitionStep:master" class="org.springframework.batch.core.partition.support.PartitionStep">
+		
+		<property name="jobRepository" ref="jobRepository" />
+
+		<property name="partitionHandler">
+			<ref bean="PartitionStepHandler"/>
+		</property>
+
+		<property name="stepExecutionSplitter">
+			<bean
+				class="org.springframework.batch.core.partition.support.SimpleStepExecutionSplitter">
+				<constructor-arg ref="jobRepository" />
+				<constructor-arg ref="partitionStep" />
+				<!--   <constructor-arg>
+					<bean class="org.springframework.batch.core.partition.support.SimplePartitioner" />
+				</constructor-arg> -->
+				<constructor-arg>					
+					<bean class="com.anderscore.springbatch.article.ColumnRangePartitioner">
+						<property name="table" value="AA_UDP_UDEPOT_S" />
+						<property name="column" value="AA_UDP_NR" />				
+					</bean> 
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+</beans>

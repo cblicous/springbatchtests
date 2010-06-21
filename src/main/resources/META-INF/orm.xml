@@ -1,0 +1,13 @@
+<entity-mappings version="1.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+	<persistence-unit-metadata>
+		<persistence-unit-defaults>
+			<access>FIELD</access>
+		</persistence-unit-defaults>
+	</persistence-unit-metadata>
+	<entity class="com.anderscore.springbatch.article.domain.MasterEntity" />
+	<entity class="com.anderscore.springbatch.article.domain.DetailEntity" />
+	<entity class="com.anderscore.springbatch.article.domain.AnotherEntity" />
+</entity-mappings>
+	
