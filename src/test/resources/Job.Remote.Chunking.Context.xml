@@ -105,6 +105,10 @@
 	<integration:channel id="chunksInChan" />
 	<integration:channel id="chunksOutChan" />
 
+<!-- 	<integration:service-activator
+		input-channel="chunksInChan" ref="chunkMessageChannelItemWriter"
+		output-channel="chunksOutChan" /> -->
+
 	<bean id="messagingGateway" class="org.springframework.integration.gateway.SimpleMessagingGateway">
 		<property name="requestChannel" ref="chunksInChan" />
 		<property name="replyChannel" ref="chunksOutChan" />
@@ -115,4 +119,36 @@
 		class="org.springframework.batch.integration.chunk.ChunkMessageChannelItemWriter">
 		<property name="messagingGateway" ref="messagingGateway" />
 	</bean>
+	
+
+
+	<!-- slave -->
+<!--
+	<bean id="slaveItemWriter" class="com.anderscore.springbatch.article.MyJpaItemWriter">
+			<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	  -->
+	<jms:inbound-gateway id="jmsingateway" request-destination="chunksOutQueue" request-channel="chunksOutChan"
+		default-reply-destination="chunksInQueue" />
+	
+	<bean id="chunkHandler"
+		class="org.springframework.batch.integration.chunk.ChunkProcessorChunkHandler">
+		<property name="chunkProcessor">
+			<bean class="org.springframework.batch.core.step.item.SimpleChunkProcessor">
+				<property name="itemWriter">
+					<bean class="com.anderscore.springbatch.article.MyJpaItemWriter" >
+						<property name="entityManagerFactory" ref="entityManagerFactory" />
+					</bean>
+				</property>
+				<property name="itemProcessor">
+					<bean
+						class="org.springframework.batch.item.support.PassThroughItemProcessor" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<integration:service-activator
+		input-channel="chunksOutChan" output-channel="chunksInChan" ref="chunkHandler" />
+
 </beans>
