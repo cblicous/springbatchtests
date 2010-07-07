@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -30,7 +31,10 @@ public class DetailEntity implements java.io.Serializable {
 	
 	@Column(nullable = false, precision = 3, scale = 0)
 	private short shortField;
-
+	
+	@ManyToOne
+	private MasterEntity masterEntity;
+	
 	public long getId() {
 		return id;
 	}
@@ -57,5 +61,13 @@ public class DetailEntity implements java.io.Serializable {
 
 	public void setShortField(short shortField) {
 		this.shortField = shortField;
+	}
+
+	public MasterEntity getMasterEntity() {
+		return masterEntity;
+	}
+
+	public void setMasterEntity(MasterEntity masterEntity) {
+		this.masterEntity = masterEntity;
 	}
 }
