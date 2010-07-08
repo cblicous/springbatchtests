@@ -13,15 +13,9 @@ import com.anderscore.springbatch.article.domain.DetailEntity;
 import com.anderscore.springbatch.article.domain.MasterEntity;
 
 public class DataGenerator {
-	 @PersistenceContext
+
 	private EntityManager entityManager;
-
-	 
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
-
-
+	 @PersistenceContext
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
@@ -51,7 +45,9 @@ public class DataGenerator {
 	}
 		
 	public void generateData(Integer entryCount ) {
-		
+		// hier hauts ihn schon auf die Fresse 
+		// d.h. der EntitiyManager wird nicht injected 
+		System.out.println(entityManager.toString());
 		for (int i = 0 ; i < entryCount; i++ ) {
 			MasterEntity tempMasterEntity = new MasterEntity(); 
 			BigDecimal bigDecimalField = new BigDecimal(generateRandomInteger(1000));
