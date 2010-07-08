@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -32,7 +33,7 @@ public class DetailEntity implements java.io.Serializable {
 	@Column(nullable = false, precision = 3, scale = 0)
 	private short shortField;
 	
-	@ManyToOne
+	@OneToOne
 	private MasterEntity masterEntity;
 	
 	public long getId() {

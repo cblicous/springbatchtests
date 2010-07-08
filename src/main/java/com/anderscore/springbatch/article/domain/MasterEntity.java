@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class MasterEntity implements java.io.Serializable {
@@ -48,7 +49,7 @@ public class MasterEntity implements java.io.Serializable {
 	@Column(precision = 18)
 	private BigDecimal bigDecimalField;
 
-	@OneToMany
+	@OneToOne
 	private DetailEntity detailEntity;
 	
 	public long getId() {
