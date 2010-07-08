@@ -52,5 +52,8 @@
 		</property>
 	</bean>
 
-
+<!--  generator  -->
+	
+	<bean id="dataGenerator" class="com.anderscore.springbatch.article.domain.utils.DataGenerator">
+	</bean>
 </beans>

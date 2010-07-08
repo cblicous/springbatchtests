@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,8 +15,15 @@ import com.anderscore.springbatch.article.domain.MasterEntity;
 
 public class DataGenerator {
 
+	private EntityManagerFactory entityManagerFactory;
+	 @PersistenceUnit 
+	 public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+		this.entityManagerFactory = entityManagerFactory;
+	}
+	 
 	private EntityManager entityManager;
-	 @PersistenceContext
+
+	@PersistenceContext
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
@@ -47,6 +55,7 @@ public class DataGenerator {
 	public void generateData(Integer entryCount ) {
 		// hier hauts ihn schon auf die Fresse 
 		// d.h. der EntitiyManager wird nicht injected 
+		System.out.println(entityManagerFactory.toString());
 		System.out.println(entityManager.toString());
 		for (int i = 0 ; i < entryCount; i++ ) {
 			MasterEntity tempMasterEntity = new MasterEntity(); 
