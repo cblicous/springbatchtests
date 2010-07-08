@@ -7,20 +7,23 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.anderscore.springbatch.article.domain.DetailEntity;
 import com.anderscore.springbatch.article.domain.MasterEntity;
 
 public class DataGenerator {
-	@PersistenceContext
-	private EntityManagerFactory entityManagerFactory;
+	 @PersistenceContext
+	private EntityManager entityManager;
 
-	public EntityManagerFactory getEntityManagerFactory() {
-		return entityManagerFactory;
+	 
+	public EntityManager getEntityManager() {
+		return entityManager;
 	}
 
 
-	public void setEntityManagerFactory(EntityManagerFactory emf) {
-		this.entityManagerFactory = emf;
+	public void setEntityManager(EntityManager entityManager) {
+		this.entityManager = entityManager;
 	}
 
 
@@ -48,7 +51,7 @@ public class DataGenerator {
 	}
 		
 	public void generateData(Integer entryCount ) {
-		EntityManager em = entityManagerFactory.createEntityManager();
+		
 		for (int i = 0 ; i < entryCount; i++ ) {
 			MasterEntity tempMasterEntity = new MasterEntity(); 
 			BigDecimal bigDecimalField = new BigDecimal(generateRandomInteger(1000));
@@ -61,7 +64,7 @@ public class DataGenerator {
 			
 			tempMasterEntity.setDetailEntity(detailEntity);
 			
-			em.persist(tempMasterEntity);
+			entityManager.persist(tempMasterEntity);
 			
 		}
 		

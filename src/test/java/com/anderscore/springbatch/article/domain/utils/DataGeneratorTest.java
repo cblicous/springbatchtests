@@ -1,7 +1,5 @@
 package com.anderscore.springbatch.article.domain.utils;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,7 +16,7 @@ public class DataGeneratorTest {
 	@Test
 	public void testGenerateData() {
 		DataGenerator  dataGenerator = new DataGenerator();
-		dataGenerator.generateData(20);
+		 dataGenerator.generateData(20);
 	}
 
 }
