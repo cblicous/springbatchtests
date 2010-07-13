@@ -1,12 +1,18 @@
 package com.anderscore.springbatch.article.domain.utils;
 
 import static org.junit.Assert.assertNotNull;
+
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanFactory;
@@ -16,12 +22,27 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-//@ContextConfiguration(locations = { "classpath:/DataGeneratorContext.xml" })
+import com.anderscore.springbatch.article.ManageJobDB;
+
+//@ContextConfiguration(locations = { "DataGeneratorContext.xml" })
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@TestExecutionListeners({DependencyInjectionTestExecutionListener.class})
 
 public class DataGeneratorTest {
-
+	static DataGenerator  dataGenerator;
+	@BeforeClass
+	public static void before() {
+		System.out.println("Calling @Beforeclass -----------------------------------");
+	  //   yourbean.em = Persistence.createEntityManagerFactory("ProjectTest-ejbPU").createEntityManager();
+		//ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(new String[] {"DataGeneratorContext.xml"});
+		//dataGenerator	= (DataGenerator) appContext.getBean("dataGenerator");
+		dataGenerator = new DataGenerator();
+		EntityManager em = Persistence.createEntityManagerFactory("springbatch.article").createEntityManager();
+		System.out.println("Entitiy Manager" +em.toString());
+		dataGenerator.setEntityManager(em);
+	
+	}
+	
 	@Test
 	public void testSimpleProperties() throws URISyntaxException, IOException {
 		assertTrue(new File(Thread.currentThread().getContextClassLoader().getResource("DataGeneratorContext.xml").toURI()).exists());
@@ -30,11 +51,14 @@ public class DataGeneratorTest {
 
 	@Test
 	public void testGenerateData() {
-		ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(new String[] {"DataGeneratorContext.xml"});
 		// of course, an ApplicationContext is just a BeanFactory
 
-		 DataGenerator  dataGenerator = (DataGenerator) appContext.getBean("dataGenerator"); // new DataGenerator();
 		 dataGenerator.generateData(20);
+	}
+	
+	@AfterClass
+	public static void after() {
+		
 	}
 
 }

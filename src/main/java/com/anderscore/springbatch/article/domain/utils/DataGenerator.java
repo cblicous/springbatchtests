@@ -55,23 +55,25 @@ public class DataGenerator {
 	public void generateData(Integer entryCount ) {
 		// hier hauts ihn schon auf die Fresse 
 		// d.h. der EntitiyManager wird nicht injected 
-		System.out.println(entityManagerFactory.toString());
-		System.out.println(entityManager.toString());
-		for (int i = 0 ; i < entryCount; i++ ) {
-			MasterEntity tempMasterEntity = new MasterEntity(); 
-			BigDecimal bigDecimalField = new BigDecimal(generateRandomInteger(1000));
-			tempMasterEntity.setBigDecimalField(bigDecimalField);
-			tempMasterEntity.setDateField(new Date());
-			tempMasterEntity.setStringField(generateRandomString(10));
-			
-			DetailEntity detailEntity = new DetailEntity(); 
-			detailEntity.setDetailIdentifier(new Date());
-			
-			tempMasterEntity.setDetailEntity(detailEntity);
-			
-			entityManager.persist(tempMasterEntity);
-			
-		}
+	
+			System.out.println(entityManagerFactory.toString());
+			System.out.println(entityManager.toString());
+			for (int i = 0 ; i < entryCount; i++ ) {
+				MasterEntity tempMasterEntity = new MasterEntity(); 
+				BigDecimal bigDecimalField = new BigDecimal(generateRandomInteger(1000));
+				tempMasterEntity.setBigDecimalField(bigDecimalField);
+				tempMasterEntity.setDateField(new Date());
+				tempMasterEntity.setStringField(generateRandomString(10));
+				
+				DetailEntity detailEntity = new DetailEntity(); 
+				detailEntity.setDetailIdentifier(new Date());
+				
+				tempMasterEntity.setDetailEntity(detailEntity);
+				
+				entityManager.persist(tempMasterEntity);
+				
+			}
+		
 		
 	}
 }
