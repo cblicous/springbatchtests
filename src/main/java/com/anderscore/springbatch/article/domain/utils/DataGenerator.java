@@ -53,9 +53,7 @@ public class DataGenerator {
 	}
 		
 	public void generateData(Integer entryCount ) {
-		// hier hauts ihn schon auf die Fresse 
-		// d.h. der EntitiyManager wird nicht injected 
-	
+
 			System.out.println(entityManagerFactory.toString());
 			System.out.println(entityManager.toString());
 			for (int i = 0 ; i < entryCount; i++ ) {

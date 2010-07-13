@@ -17,6 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -30,19 +31,13 @@ import com.anderscore.springbatch.article.ManageJobDB;
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class})
 
 public class DataGeneratorTest {
+	@Autowired
 	public  DataGenerator  dataGenerator;
 	
 	@Before
 	
 	public  void before() {
 		System.out.println("Calling @Beforeclass -----------------------------------");
-	  //   yourbean.em = Persistence.createEntityManagerFactory("ProjectTest-ejbPU").createEntityManager();
-	//	ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(new String[] {"DataGeneratorContext.xml"});
-	//	dataGenerator	= (DataGenerator) appContext.getBean("dataGenerator");
-		//dataGenerator = new DataGenerator();
-		//EntityManager em = Persistence.createEntityManagerFactory("springbatch.article").createEntityManager();
-		//System.out.println("Entitiy Manager" +em.toString());
-		//dataGenerator.setEntityManager(em);
 	
 	}
 	
@@ -55,7 +50,6 @@ public class DataGeneratorTest {
 	@Test
 	public void testGenerateData() {
 		// of course, an ApplicationContext is just a BeanFactory
-
 		 dataGenerator.generateData(20);
 	}
 	
