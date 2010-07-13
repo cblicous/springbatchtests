@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,22 +25,24 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.anderscore.springbatch.article.ManageJobDB;
 
-//@ContextConfiguration(locations = { "DataGeneratorContext.xml" })
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@TestExecutionListeners({DependencyInjectionTestExecutionListener.class})
+@ContextConfiguration(locations = { "/DataGeneratorContext.xml" })
+@RunWith(SpringJUnit4ClassRunner.class)
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class})
 
 public class DataGeneratorTest {
-	static DataGenerator  dataGenerator;
-	@BeforeClass
-	public static void before() {
+	public  DataGenerator  dataGenerator;
+	
+	@Before
+	
+	public  void before() {
 		System.out.println("Calling @Beforeclass -----------------------------------");
 	  //   yourbean.em = Persistence.createEntityManagerFactory("ProjectTest-ejbPU").createEntityManager();
-		//ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(new String[] {"DataGeneratorContext.xml"});
-		//dataGenerator	= (DataGenerator) appContext.getBean("dataGenerator");
-		dataGenerator = new DataGenerator();
-		EntityManager em = Persistence.createEntityManagerFactory("springbatch.article").createEntityManager();
-		System.out.println("Entitiy Manager" +em.toString());
-		dataGenerator.setEntityManager(em);
+	//	ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(new String[] {"DataGeneratorContext.xml"});
+	//	dataGenerator	= (DataGenerator) appContext.getBean("dataGenerator");
+		//dataGenerator = new DataGenerator();
+		//EntityManager em = Persistence.createEntityManagerFactory("springbatch.article").createEntityManager();
+		//System.out.println("Entitiy Manager" +em.toString());
+		//dataGenerator.setEntityManager(em);
 	
 	}
 	

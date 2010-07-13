@@ -16,14 +16,14 @@ import com.anderscore.springbatch.article.domain.MasterEntity;
 public class DataGenerator {
 
 	private EntityManagerFactory entityManagerFactory;
-	 @PersistenceUnit 
+	 @PersistenceUnit(name="springbatch.article")
 	 public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
 		this.entityManagerFactory = entityManagerFactory;
 	}
 	 
 	private EntityManager entityManager;
 
-	@PersistenceContext
+	@PersistenceContext(name="springbatch.article")
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
