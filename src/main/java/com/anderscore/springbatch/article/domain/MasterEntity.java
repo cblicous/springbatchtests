@@ -3,6 +3,7 @@ package com.anderscore.springbatch.article.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,7 +50,7 @@ public class MasterEntity implements java.io.Serializable {
 	private BigDecimal bigDecimalField;
 
 	@OneToMany
-	private DetailEntity detailEntity;
+	private List<DetailEntity> detailEntity;
 	
 	public long getId() {
 		return id;
@@ -127,11 +128,11 @@ public class MasterEntity implements java.io.Serializable {
 		this.bigDecimalField = bigDecimalField;
 	}
 
-	public DetailEntity getDetailEntity() {
+	public List<DetailEntity> getDetailEntity() {
 		return detailEntity;
 	}
 
-	public void setDetailEntity(DetailEntity detailEntity) {
+	public void setDetailEntity(List<DetailEntity> detailEntity) {
 		this.detailEntity = detailEntity;
 	}
 }
