@@ -3,6 +3,8 @@ package com.anderscore.springbatch.article.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -18,6 +20,7 @@ public class AnotherEntity implements java.io.Serializable {
 
 	@Id
 	@Column(nullable = false, precision = 10, scale = 0)
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 
 	@Column(nullable = false, precision = 2, scale = 0)
