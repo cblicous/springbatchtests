@@ -47,8 +47,8 @@ public class JobRemoteChunkingMasterTest {
 
 	@Test
 	public void testSimpleProperties() throws URISyntaxException, IOException {
-		assertTrue(new File(Thread.currentThread().getContextClassLoader().getResource("Job.Remote.Chunking.Context.xml").toURI()).exists());
-		assertTrue(new File(Thread.currentThread().getContextClassLoader().getResource("jobs/Job.Remote.Chunking.Master.xml").toURI()).exists());
+		assertTrue("Job.Remote.Chunking.Context.xml not found", new File(Thread.currentThread().getContextClassLoader().getResource("Job.Remote.Chunking.Context.xml").toURI()).exists());
+		assertTrue("jobs/Job.Remote.Chunking.Master.xml not found", new File(Thread.currentThread().getContextClassLoader().getResource("jobs/Job.Remote.Chunking.Master.xml").toURI()).exists());
 		assertNotNull(jobLauncher);
 	}
 

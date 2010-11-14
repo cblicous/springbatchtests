@@ -3,6 +3,7 @@ package com.anderscore.springbatch.article.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,7 +52,7 @@ public class MasterEntity implements java.io.Serializable {
 
 	@OneToOne
 	private DetailEntity detailEntity;
-	
+
 	public long getId() {
 		return id;
 	}

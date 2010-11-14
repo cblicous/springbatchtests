@@ -37,16 +37,19 @@ public class ToAnotherEntityProcessor implements ItemProcessor<MasterEntity, Ano
 	{
 		AnotherEntity anotherEntity = new AnotherEntity();		
 		
+		anotherEntity.setAnotherIdentifier(item.getByteField());
+		anotherEntity.setIntegerField(item.getIntegerField());
+		
 		ResultCounter.INSTANCE.increment();
 		long i = ResultCounter.INSTANCE.numberOfResults();
-		if (i%1000 == 0)
-		{
+//		if (i%1000 == 0)
+//		{
 			System.out.println("============================");
-			System.out.println("IN TRANSFORMER: (timestamp: " + new Date().getTime() + ")");
+			System.out.println("IN TRANSFORMER: (timestamp: " + new Date() + ")");
 			System.out.println("Thread: " + Thread.currentThread().getName()+ " ThreadID: " + Thread.currentThread().getId());
 			System.out.println("Transformed items (total): " + i);
 			System.out.println("============================");
-		}
+//		}
 		
 		
 		return anotherEntity;		

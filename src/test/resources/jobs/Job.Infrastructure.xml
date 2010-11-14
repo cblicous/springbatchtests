@@ -19,10 +19,8 @@
 		</property>
 		<property name="queryString">
 		<value>
-			<![CDATA[
-			  SELECT masterEntity
-			  FROM MasterEntity masterEntity
-            ]]>
+			<![CDATA[SELECT masterEntity
+			  FROM MasterEntity masterEntity]]>
     		</value>
    		</property>
 	</bean>
